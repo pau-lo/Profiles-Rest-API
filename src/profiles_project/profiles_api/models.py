@@ -1,7 +1,6 @@
-# -*- coding: utf-8 -*-
-
 from django.db import models
 from django.contrib.auth.models import BaseUserManager
+# for the user profile model
 from django.contrib.auth.models import AbstractBaseUser
 from django.contrib.auth.models import PermissionsMixin
 
@@ -12,13 +11,13 @@ class UserProfileManager(BaseUserManager):
     """Helps Django work with our custom user model."""
 
     def create_user(self, email, name, password=None):
-        """Creates as a new user profile object."""
+        """Creates a new user profile."""
 
         if not email:
             raise ValueError('Users must have an email address.')
 
         email = self.normalize_email(email)
-        user = self.model(email=email, name=name)
+        user = self.model(email=email, name=name,)
 
         user.set_password(password)
         user.save(using=self._db)
@@ -26,7 +25,7 @@ class UserProfileManager(BaseUserManager):
         return user
 
     def create_superuser(self, email, name, password):
-        """Creates and saves a new superuser with given details"""
+        """Creates and saves a new superuser with given details."""
 
         user = self.create_user(email, name, password)
 
@@ -38,8 +37,10 @@ class UserProfileManager(BaseUserManager):
 
 
 class UserProfile(AbstractBaseUser, PermissionsMixin):
-    """Represents a user profile inside our system. Stores all user
-    account related data, such as 'email address and 'name'."""
+    """
+    Represents a "user profile" inside out system. Stores all user account
+    related data, such as 'email address' and 'name'.
+    """
 
     email = models.EmailField(max_length=255, unique=True)
     name = models.CharField(max_length=255)
@@ -51,21 +52,18 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['name']
 
+    def get_full_name(self):
+        """Django uses this when it needs to get the user's full name."""
 
-def get_full_name(self):
-    """Used to get a user fullname."""
+        return self.name
 
-    return self.name
+    def get_short_name(self):
+        """Django uses this when it needs to get the users abbreviated name."""
 
+        return self.name
 
-def get_short_name(self):
-    """Used to get a users short name."""
+    def __str__(self):
+        """Django uses this when it needs to convert the object to text."""
 
-    return self.name
-
-
-def __str__(self):
-    """Django uses this when it needs to convert the object to a string."""
-
-    return self.email
+        return self.email
 
