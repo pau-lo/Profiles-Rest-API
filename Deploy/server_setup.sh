@@ -21,7 +21,7 @@ mkdir -p $PROJECT_BASE_PATH
 git clone $PROJECT_GIT_URL $PROJECT_BASE_PATH/profiles-rest-api
 
 mkdir -p $VIRTUALENV_BASE_PATH
-virtualenv  $VIRTUALENV_BASE_PATH/profiles_api
+virtualenv  $VIRTUALENV_BASE_PATH/myenv
 
 source $VIRTUALENV_BASE_PATH/profiles_api/bin/activate
 pip install -r $PROJECT_BASE_PATH/profiles-rest-api/requirements.txt
@@ -33,7 +33,7 @@ cd $PROJECT_BASE_PATH/profiles-rest-api/src
 cp $PROJECT_BASE_PATH/profiles-rest-api/deploy/supervisor_profiles_api.conf /etc/supervisor/conf.d/profiles_api.conf
 supervisorctl reread
 supervisorctl update
-supervisorctl restart profiles_api
+supervisorctl restart myenv
 
 # Setup nginx to make our application accessible.
 cp $PROJECT_BASE_PATH/profiles-rest-api/deploy/nginx_profiles_api.conf /etc/nginx/sites-available/profiles_api.conf
